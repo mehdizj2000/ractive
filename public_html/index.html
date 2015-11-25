@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang='en-GB'>
+    <head>
+        <meta charset='utf-8'>
+        <title>Ractive test</title>
+
+        <style>
+
+            .progress-bar {
+                position: relative;
+                width: 350px;
+                height: 40px;
+                border: 1px solid darkgray;
+            }
+            .progress-bar-fill {
+                height: inherit;                
+                background-color: lightblue;
+            }
+
+            .progress-bar-fill-red {
+                height: inherit;                
+                background-color: red;
+
+            }
+            .progress-label {
+                position: relative;
+                top: -30px;
+                width: 25px;
+                margin: 0 auto;
+                color: #000;                
+            }
+
+
+            .marg {
+                margin-right: 10px;
+            }
+
+        </style>
+
+
+    </head>
+
+    <body>
+
+        <div id='container'></div>
+        <script id="template" type='text/ractive'>
+
+            <h1>Progress Bar Demo</h1>
+
+            {{#each progressbars}}
+                <div class="progress-bar">
+                    {{#if value < 100}}
+                        <div class="progress-bar-fill" style="width: {{value}}%">                        
+                    </div>
+                    {{/if}}
+
+                    {{#if value>=100}}
+                        <div class="progress-bar-fill-red" style="width: 100%">                        
+                    </div>
+                    {{/if}}
+                    <div class="progress-label">{{value}}%</div>
+                </div>        
+                <br/>
+            {{/each}}
+
+            <select class="marg" value='{{selectedProgress}}'>
+            {{#each progressbars :index}}
+            <option value='{{index}}'>{{name}}</option>
+            {{/each}}
+            </select>
+
+            {{#each amounts}}
+                <button class="marg" on-click='adjust(this)'>{{this > 0 ? '+' : ''}}{{this}}</button>
+            {{/each}}
+        </script>
+
+
+        <script src='http://cdn.ractivejs.org/latest/ractive.min.js'></script>
+
+        <script>
+
+            var ractive = new Ractive({
+                el: document.body,
+                template: '#template',
+                data: {
+                    progressbars: [
+                        {name: '#progress1', value: 0},
+                        {name: '#progress2', value: 0},
+                        {name: '#progress3', value: 0}
+
+                        // and so on...
+                    ],
+                    amounts: [+25, +10, -10, -25]
+                },
+                adjust: function (d) {
+                    var selected = this.get('selectedProgress');
+                    if (selected === null)
+                        return;
+
+                    var keypath = 'progressbars[' + selected + '].value';
+                    if (this.get(keypath) + d < 0) {
+                        this.set(keypath, 0);
+                    } else {
+                        this.add(keypath, d);
+                    }
+                }
+            });
+
+        </script>
+    </body>
+</html>
