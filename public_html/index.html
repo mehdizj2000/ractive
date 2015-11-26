@@ -49,12 +49,12 @@
 
             {{#each progressbars}}
                 <div class="progress-bar">
-                    {{#if value < 100}}
+                    {{#if value <= 100}}
                         <div class="progress-bar-fill" style="width: {{value}}%">                        
                     </div>
                     {{/if}}
 
-                    {{#if value>=100}}
+                    {{#if value>100}}
                         <div class="progress-bar-fill-red" style="width: 100%">                        
                     </div>
                     {{/if}}
